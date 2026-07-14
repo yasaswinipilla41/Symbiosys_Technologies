@@ -1,73 +1,119 @@
-import { motion } from 'framer-motion';
-import { FiSearch, FiClipboard, FiPenTool, FiCode, FiCheckCircle, FiUploadCloud, FiLifeBuoy } from 'react-icons/fi';
+import { useRef, useState } from 'react';
+import { motion, useInView, useReducedMotion } from 'framer-motion';
 import SectionHeading from './ui/SectionHeading';
 
 const steps = [
-  { icon: FiSearch, title: 'Discovery', text: 'We immerse in your goals, users and constraints to define the right problem.' },
-  { icon: FiClipboard, title: 'Planning', text: 'Roadmaps, architecture and success metrics — a clear plan everyone aligns on.' },
-  { icon: FiPenTool, title: 'Design', text: 'Human-centered UX and technical design that balances beauty and scale.' },
-  { icon: FiCode, title: 'Development', text: 'Clean, tested code shipped in tight, transparent iterations.' },
-  { icon: FiCheckCircle, title: 'Testing', text: 'Automated and manual QA ensuring quality, security and performance.' },
-  { icon: FiUploadCloud, title: 'Deployment', text: 'Confident, low-risk releases with CI/CD and observability built in.' },
-  { icon: FiLifeBuoy, title: 'Support', text: 'Continuous optimization, monitoring and 24/7 support after launch.' },
+  'Requirement Analysis',
+  'Strategy & Planning',
+  'UI / UX Design',
+  'Software Development',
+  'AI & Automation',
+  'Testing & QA',
+  'Deployment',
+  'Monitoring',
+  'Optimization',
+  'Continuous Innovation',
 ];
 
-export default function Process() {
+// Auto-rotation choreography: each card flips once per cycle, one after
+// another (180ms stagger), looping forever while the section is on screen.
+const FLIP = 1.1; // seconds per flip
+const STAGGER = 0.18;
+const REST = 1.4; // beat after the wave completes
+const CYCLE = steps.length * STAGGER + FLIP + REST;
+
+function CardFace({ n, name, back = false }: { n: string; name: string; back?: boolean }) {
   return (
-    <section id="process" className="relative overflow-hidden bg-gradient-to-b from-white to-[#eef4f9] py-28">
+    <div
+      className="absolute inset-0 flex flex-col justify-between rounded-2xl border border-white/10 bg-[#070707] p-5 md:p-6"
+      style={{ backfaceVisibility: 'hidden', transform: back ? 'rotateY(180deg)' : undefined }}
+    >
+      <span className="font-display text-xs text-muted transition-colors">{n}</span>
+      <p className="font-display text-base leading-tight text-white md:text-lg">{name}</p>
+    </div>
+  );
+}
+
+function LifecycleCard({ name, i, active }: { name: string; i: number; active: boolean }) {
+  const [hovered, setHovered] = useState(false);
+  const n = String(i + 1).padStart(2, '0');
+  const spinning = active && !hovered;
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 26 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.3 }}
+      transition={{ duration: 0.6, delay: (i % 5) * 0.07, ease: [0.22, 1, 0.36, 1] }}
+      className="relative"
+      style={{ perspective: 1100 }}
+      onHoverStart={() => setHovered(true)}
+      onHoverEnd={() => setHovered(false)}
+      data-cursor="hover"
+    >
+      {/* soft glow — blooms while the card is hovered */}
+      <div
+        className={`pointer-events-none absolute -inset-2 rounded-3xl bg-accent/15 blur-xl transition-opacity duration-500 ${hovered ? 'opacity-100' : 'opacity-0'}`}
+      />
+      <motion.div
+        animate={
+          spinning
+            ? { rotateY: 360, scale: 1 }
+            : { rotateY: 0, scale: hovered ? 1.05 : 1 }
+        }
+        transition={
+          spinning
+            ? {
+                rotateY: {
+                  duration: FLIP,
+                  ease: [0.45, 0, 0.25, 1],
+                  delay: i * STAGGER,
+                  repeat: Infinity,
+                  repeatDelay: CYCLE - FLIP,
+                },
+                scale: { duration: 0.3 },
+              }
+            : { duration: 0.45, ease: [0.22, 1, 0.36, 1] }
+        }
+        style={{ transformStyle: 'preserve-3d' }}
+        className={`relative h-32 transition-shadow duration-500 md:h-40 ${hovered ? 'z-10' : ''}`}
+      >
+        {/* identical front + back faces → the card reads as a solid slab spinning */}
+        <CardFace n={n} name={name} />
+        <CardFace n={n} name={name} back />
+        {/* accent edge on hover */}
+        <div
+          className={`pointer-events-none absolute inset-0 rounded-2xl border transition-colors duration-500 ${hovered ? 'border-accent/60' : 'border-transparent'}`}
+          style={{ backfaceVisibility: 'hidden' }}
+        />
+      </motion.div>
+    </motion.div>
+  );
+}
+
+export default function Process() {
+  const ref = useRef<HTMLElement>(null);
+  // not `once` — the wave pauses off-screen and resumes on return
+  const inView = useInView(ref, { amount: 0.25 });
+  const reduced = useReducedMotion();
+  const active = inView && !reduced;
+
+  return (
+    <section id="process" ref={ref} className="relative overflow-hidden bg-void py-24 md:py-32">
+      {/* soft ambient wash */}
+      <div className="pointer-events-none absolute -left-40 top-1/3 h-96 w-96 rounded-full bg-accent/[0.06] blur-[130px]" />
       <div className="container-x relative">
         <SectionHeading
-          eyebrow="How We Work"
-          title={<>A proven path from <span className="text-gradient">idea to impact</span></>}
-          subtitle="Seven disciplined stages that de-risk delivery and keep you in control the whole way."
+          index="04"
+          label="Development Lifecycle"
+          title={<>A single point of contact, from brief to delivery.</>}
+          lead="Central to our delivery is a proactive communications culture — potential issues are spotted and resolved early, with regular reviews and status reports throughout."
         />
 
-        <div className="relative">
-          {/* connecting line */}
-          <div className="absolute left-1/2 top-0 hidden h-full w-px -translate-x-1/2 bg-gradient-to-b from-brand-cyan via-brand-green to-brand-orange lg:block" />
-
-          <div className="space-y-6 lg:space-y-2">
-            {steps.map((s, i) => {
-              const left = i % 2 === 0;
-              return (
-                <div key={s.title} className="lg:grid lg:grid-cols-2 lg:gap-12">
-                  {/* spacer for alternating layout */}
-                  {!left && <div className="hidden lg:block" />}
-                  <motion.div
-                    initial={{ opacity: 0, x: left ? -50 : 50 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true, amount: 0.5 }}
-                    transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-                    className={`relative ${left ? 'lg:text-right' : ''}`}
-                  >
-                    <div className="group relative rounded-3xl border border-navy/5 bg-white p-7 shadow-soft transition-all duration-500 hover:-translate-y-1.5 hover:shadow-card">
-                      {/* node dot */}
-                      <span
-                        className={`absolute top-1/2 hidden h-5 w-5 -translate-y-1/2 place-items-center rounded-full bg-white ring-4 ring-brand-cyan/30 lg:grid ${
-                          left ? '-right-[3.9rem]' : '-left-[3.9rem]'
-                        }`}
-                      >
-                        <span className="h-2.5 w-2.5 rounded-full bg-gradient-to-br from-royal to-brand-cyan" />
-                      </span>
-                      <div className={`flex items-center gap-4 ${left ? 'lg:flex-row-reverse' : ''}`}>
-                        <div className="grid h-14 w-14 shrink-0 place-items-center rounded-2xl bg-gradient-to-br from-royal to-brand-cyan text-white shadow-glow transition-transform duration-500 group-hover:rotate-6">
-                          <s.icon size={24} />
-                        </div>
-                        <div>
-                          <div className="font-display text-sm font-bold uppercase tracking-widest text-brand-cyan">
-                            Step {String(i + 1).padStart(2, '0')}
-                          </div>
-                          <h3 className="font-display text-xl font-bold text-navy">{s.title}</h3>
-                        </div>
-                      </div>
-                      <p className="mt-4 text-sm leading-relaxed text-navy/60">{s.text}</p>
-                    </div>
-                  </motion.div>
-                  {left && <div className="hidden lg:block" />}
-                </div>
-              );
-            })}
-          </div>
+        <div className="mt-16 grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-5">
+          {steps.map((s, i) => (
+            <LifecycleCard key={s} name={s} i={i} active={active} />
+          ))}
         </div>
       </div>
     </section>
