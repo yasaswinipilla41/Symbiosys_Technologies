@@ -64,9 +64,10 @@ export default function Hero() {
               loading="eager"
               className="h-full w-full object-cover opacity-90"
               style={{
-                objectPosition: '55% 38%',
-                maskImage: 'radial-gradient(120% 110% at 70% 100%, #000 55%, transparent 88%)',
-                WebkitMaskImage: 'radial-gradient(120% 110% at 70% 100%, #000 55%, transparent 88%)',
+                // keep the SYMBIOSYS TECHNOLOGIES facade signage in frame
+                objectPosition: '50% 28%',
+                maskImage: 'radial-gradient(125% 115% at 68% 100%, #000 58%, transparent 90%)',
+                WebkitMaskImage: 'radial-gradient(125% 115% at 68% 100%, #000 58%, transparent 90%)',
               }}
             />
           </motion.div>
@@ -99,7 +100,7 @@ export default function Hero() {
             <span className="label label-dot">Symbiosys Technologies</span>
           </motion.div>
 
-          <h1 className="display mt-8" style={{ fontSize: 'clamp(2rem, 4.2vw, 3.8rem)' }}>
+          <h1 className="display mt-8" style={{ fontSize: 'clamp(2rem, 3.0vw, 3.8rem)' }}>
             <span className="block">
               {line1.map((w, i) => (
                 <span key={w} className="mr-[0.2em] inline-block overflow-hidden pb-[0.06em] align-top">

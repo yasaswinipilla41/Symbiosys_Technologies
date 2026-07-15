@@ -21,9 +21,11 @@ html.lenis,
 html.lenis body {
   height: auto;
 }
+
 .lenis.lenis-smooth {
   scroll-behavior: auto !important;
 }
+
 .lenis.lenis-stopped {
   overflow: hidden;
 }
@@ -31,7 +33,8 @@ html.lenis body {
 body {
   @apply bg-void text-white antialiased;
   font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
-  font-weight: 200; /* signature ultra-light body */
+  font-weight: 200;
+  /* signature ultra-light body */
   font-feature-settings: 'ss01' on, 'cv01' on;
   margin: 0;
   overflow-x: hidden;
@@ -46,9 +49,11 @@ body {
 ::-webkit-scrollbar {
   width: 10px;
 }
+
 ::-webkit-scrollbar-track {
   background: #000;
 }
+
 ::-webkit-scrollbar-thumb {
   background: #2a2a2a;
   border-radius: 99px;
@@ -60,6 +65,7 @@ body {
 .has-cursor * {
   cursor: none !important;
 }
+
 .cursor-dot,
 .cursor-ring {
   position: fixed;
@@ -71,17 +77,20 @@ body {
   transform: translate(-50%, -50%);
   will-change: transform;
 }
+
 .cursor-dot {
   width: 6px;
   height: 6px;
   background: #00b5e2;
 }
+
 .cursor-ring {
   width: 34px;
   height: 34px;
   border: 1.5px solid rgba(0, 181, 226, 0.6);
   transition: width 0.25s ease, height 0.25s ease, background 0.25s ease, border-color 0.25s ease;
 }
+
 .cursor-ring.is-hover {
   width: 58px;
   height: 58px;
@@ -98,6 +107,7 @@ body {
   .label {
     @apply inline-flex items-center gap-2.5 text-[13px] font-semibold uppercase tracking-[0.14em] text-spark;
   }
+
   .label-dot::before {
     content: '';
     @apply inline-block h-1.5 w-1.5 rounded-full bg-spark;
@@ -109,14 +119,17 @@ body {
     letter-spacing: -0.04em;
     line-height: 1.02;
   }
+
   .heading-hero {
     @apply display;
     font-size: clamp(3rem, 9.5vw, 7.05rem);
   }
+
   .heading-xl {
     @apply display;
     font-size: clamp(2.4rem, 6.4vw, 4.9rem);
   }
+
   .heading-lg {
     @apply display;
     font-size: clamp(1.9rem, 4vw, 3rem);
@@ -142,18 +155,22 @@ body {
   .btn {
     @apply relative inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-[13px] font-semibold uppercase tracking-[0.06em] transition-all duration-300 will-change-transform;
   }
+
   .btn-solid {
     @apply btn bg-accent text-black;
   }
+
   .btn-solid:hover {
     @apply bg-accent-soft;
     transform: translateY(-1px);
   }
+
   /* Secondary actions are ghost text — no container */
   .btn-outline,
   .btn-ghost-light {
     @apply inline-flex items-center gap-2 text-[13px] font-semibold uppercase tracking-[0.06em] text-white transition-colors duration-300;
   }
+
   .btn-outline:hover,
   .btn-ghost-light:hover {
     @apply text-spark;
@@ -162,6 +179,7 @@ body {
   .link-arrow {
     @apply inline-flex items-center gap-2 text-sm font-normal text-white transition-colors duration-300;
   }
+
   .link-arrow:hover {
     @apply text-spark;
   }
@@ -172,21 +190,265 @@ body {
   }
 }
 
+/* ============================================================
+   INTRO — cinematic 3D brand reveal (GPU-only: transform/opacity)
+   ============================================================ */
+.intro-letter {
+  display: inline-block;
+  opacity: 0;
+  transform: translate3d(0, 55%, -140px) rotate3d(1, 0, 0, 55deg) scale(0.92);
+  animation: intro-rise 0.95s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  will-change: transform, opacity;
+}
+
+@keyframes intro-rise {
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) rotate3d(1, 0, 0, 0deg) scale(1);
+  }
+}
+
+/* extruded depth + cinematic rim light */
+.intro-depth {
+  color: #fff;
+  text-shadow:
+    0 1px 0 #0c2836,
+    0 2px 0 #0b2431,
+    0 3px 0 #0a202c,
+    0 4px 0 #081b26,
+    0 6px 2px rgba(0, 0, 0, 0.55),
+    0 10px 30px rgba(0, 181, 226, 0.28),
+    0 0 60px rgba(0, 181, 226, 0.14);
+}
+
+/* sweeping light beam across the wordmark */
+.intro-shine {
+  position: absolute;
+  inset: -20% -30%;
+  background: linear-gradient(100deg, transparent 42%, rgba(255, 255, 255, 0.5) 50%, rgba(0, 181, 226, 0.25) 54%, transparent 62%);
+  mix-blend-mode: overlay;
+  transform: translate3d(-120%, 0, 0);
+  animation: intro-sweep 1.4s cubic-bezier(0.6, 0, 0.3, 1) 2.3s forwards;
+  pointer-events: none;
+}
+
+@keyframes intro-sweep {
+  to {
+    transform: translate3d(120%, 0, 0);
+  }
+}
+
+/* soft floor reflection */
+.intro-reflect {
+  transform: scaleY(-1) translate3d(0, -8px, 0);
+  opacity: 0.16;
+  filter: blur(1.5px);
+  -webkit-mask-image: linear-gradient(to top, transparent 45%, #000 100%);
+  mask-image: linear-gradient(to top, transparent 45%, #000 100%);
+  pointer-events: none;
+}
+
+/* gentle levitation once assembled */
+.intro-float {
+  animation: intro-float 5.5s ease-in-out 1.6s infinite;
+  will-change: transform;
+}
+
+@keyframes intro-float {
+
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+
+  50% {
+    transform: translate3d(0, -10px, 0);
+  }
+}
+
+/* breathing ambient glow behind the mark */
+.intro-halo {
+  animation: intro-halo 3.2s ease-in-out 0.4s infinite;
+}
+
+@keyframes intro-halo {
+
+  0%,
+  100% {
+    opacity: 0.45;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 0.8;
+    transform: scale(1.08);
+  }
+}
+
+/* ============================================================
+   TILT CARDS — layered, cursor-reactive testimonial cards
+   (animated gradient border + drifting sheen, GPU-only)
+   ============================================================ */
+@property --bang {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+
+.tilt-border {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: conic-gradient(
+    from var(--bang),
+    rgba(0, 181, 226, 0.55),
+    rgba(255, 255, 255, 0.06) 25%,
+    rgba(245, 130, 32, 0.4) 52%,
+    rgba(255, 255, 255, 0.06) 75%,
+    rgba(0, 181, 226, 0.55)
+  );
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  animation: tilt-border-spin 7s linear infinite;
+  opacity: 0.4;
+  transition: opacity 0.5s ease;
+  pointer-events: none;
+}
+
+.group:hover .tilt-border {
+  opacity: 1;
+}
+
+@keyframes tilt-border-spin {
+  to {
+    --bang: 360deg;
+  }
+}
+
+.tilt-sheen {
+  position: absolute;
+  inset: -40%;
+  background: linear-gradient(115deg, transparent 42%, rgba(255, 255, 255, 0.045) 50%, transparent 58%);
+  animation: tilt-sheen-move 9s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes tilt-sheen-move {
+  0%,
+  100% {
+    transform: translate3d(-22%, 0, 0);
+  }
+
+  50% {
+    transform: translate3d(22%, 0, 0);
+  }
+}
+
+/* ============================================================
+   SERVICES CAROUSEL — seamless infinite marquee of premium cards
+   (CSS-only motion: translate3d loop, hover pauses the track)
+   ============================================================ */
+.svc-track {
+  animation: svc-scroll 55s linear infinite;
+  will-change: transform;
+}
+
+.svc-carousel:hover .svc-track {
+  animation-play-state: paused;
+}
+
+@keyframes svc-scroll {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.svc-card {
+  transform: translate3d(0, 0, 0);
+  transition:
+    transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.45s ease,
+    border-color 0.45s ease;
+  will-change: transform;
+}
+
+.svc-card:hover {
+  transform: translate3d(0, -8px, 0) scale(1.02) rotateX(2deg) rotateY(-2.5deg);
+  border-color: rgba(255, 255, 255, 0.2);
+  box-shadow:
+    0 0 32px rgba(0, 181, 226, 0.14),
+    0 24px 60px rgba(0, 0, 0, 0.5);
+}
+
+/* ============================================================
+   INTRO — cinematic building reveal layers
+   ============================================================ */
+.intro-img {
+  opacity: 0;
+  animation: intro-img-in 2.1s cubic-bezier(0.22, 1, 0.36, 1) 0.15s forwards;
+  will-change: transform, opacity, filter;
+}
+
+@keyframes intro-img-in {
+  from {
+    opacity: 0;
+    transform: scale(1.16) rotate3d(1, 0, 0, 7deg);
+    filter: blur(16px);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1.02) rotate3d(1, 0, 0, 0deg);
+    filter: blur(0);
+  }
+}
+
+.intro-kenburns {
+  animation: intro-kb 9s ease-in-out 0.15s infinite alternate;
+  will-change: transform;
+}
+
+@keyframes intro-kb {
+  from {
+    transform: scale(1.02);
+  }
+
+  to {
+    transform: scale(1.1);
+  }
+}
+
 @layer utilities {
   .grain {
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
     background-size: 180px 180px;
   }
+
   .text-balance {
     text-wrap: balance;
   }
+
   .animate-marquee {
     animation: marquee 44s linear infinite;
   }
+
   @keyframes marquee {
-    from { transform: translateX(0); }
-    to { transform: translateX(-50%); }
+    from {
+      transform: translateX(0);
+    }
+
+    to {
+      transform: translateX(-50%);
+    }
   }
+
   .animate-spin-slow {
     animation: spin 48s linear infinite;
   }
@@ -200,75 +462,155 @@ body {
 html.light body {
   background: #f3f5f9;
 }
+
 html.light .theme-scope .bg-void,
 html.light .theme-scope .bg-paper {
   background-color: #f3f5f9;
 }
+
 html.light .theme-scope .bg-paper-2 {
   background-color: #eceff5;
 }
+
 html.light .theme-scope .bg-paper-3 {
   background-color: #e3e8f1;
 }
+
 /* sculptural headings & body carry their colour in their own classes */
 html.light .theme-scope :is(.display, .heading-hero, .heading-xl, .heading-lg) {
   color: #0b1622;
 }
+
 html.light .theme-scope body,
 html.light .theme-scope section {
   color: #0b1622;
 }
-html.light .theme-scope .bg-\[\#070707\] {
-  background-color: #ffffff;
+
+html.light .theme-scope .bg-\[\#E6E6FA\] {
+  background-color: azure;
   box-shadow: 0 14px 34px -22px rgba(11, 22, 34, 0.25);
 }
+
 html.light .theme-scope .text-white {
-  color: #0b1622;
+  color: #333333;
+  font-weight: 400;
 }
+
 html.light .theme-scope .\!text-white {
   color: #0b1622 !important;
 }
-html.light .theme-scope .text-white\/85 { color: rgba(11, 22, 34, 0.85); }
-html.light .theme-scope .text-white\/80 { color: rgba(11, 22, 34, 0.8); }
-html.light .theme-scope .text-white\/55 { color: rgba(11, 22, 34, 0.6); }
-html.light .theme-scope .text-white\/40 { color: rgba(11, 22, 34, 0.45); }
-html.light .theme-scope .text-white\/35 { color: rgba(11, 22, 34, 0.35); }
-html.light .theme-scope .text-white\/25 { color: rgba(11, 22, 34, 0.3); }
-html.light .theme-scope .text-ink { color: #0b1622; }
-html.light .theme-scope .text-ink-soft { color: #33414f; }
-html.light .theme-scope .text-muted { color: #5c6875; }
+
+html.light .theme-scope .text-white\/85 {
+  color: rgba(11, 22, 34, 0.85);
+}
+
+html.light .theme-scope .text-white\/80 {
+  color: rgba(11, 22, 34, 0.8);
+}
+
+html.light .theme-scope .text-white\/55 {
+  color: rgba(11, 22, 34, 0.6);
+}
+
+html.light .theme-scope .text-white\/40 {
+  color: rgba(11, 22, 34, 0.45);
+}
+
+html.light .theme-scope .text-white\/35 {
+  color: rgba(11, 22, 34, 0.35);
+}
+
+html.light .theme-scope .text-white\/25 {
+  color: rgba(11, 22, 34, 0.3);
+}
+
+html.light .theme-scope .text-ink {
+  color: #0b1622;
+}
+
+html.light .theme-scope .text-ink-soft {
+  color: #33414f;
+}
+
+html.light .theme-scope .text-muted {
+  color: black;
+  font-weight: 500;
+}
+
 html.light .theme-scope .text-muted-light,
-html.light .theme-scope .lead { color: #5c6875; }
-html.light .theme-scope .text-paper { color: #ffffff; }
-html.light .theme-scope .bg-ink { background-color: #0b1622; }
-html.light .theme-scope .border-ink { border-color: #0b1622; }
+html.light .theme-scope .lead {
+  color: #5c6875;
+}
+
+html.light .theme-scope .text-paper {
+  color: #ffffff;
+}
+
+html.light .theme-scope .bg-ink {
+  background-color: #0b1622;
+}
+
+html.light .theme-scope .border-ink {
+  border-color: #0b1622;
+}
+
 html.light .theme-scope .border-white\/10,
-html.light .theme-scope .border-line { border-color: rgba(11, 22, 34, 0.12); }
-html.light .theme-scope .border-white\/15 { border-color: rgba(11, 22, 34, 0.16); }
-html.light .theme-scope .border-white\/20 { border-color: rgba(11, 22, 34, 0.22); }
-html.light .theme-scope .bg-white\/5 { background-color: rgba(11, 22, 34, 0.05); }
-html.light .theme-scope .bg-white\/10 { background-color: rgba(11, 22, 34, 0.08); }
-html.light .theme-scope .bg-white\/15 { background-color: rgba(11, 22, 34, 0.1); }
-html.light .theme-scope .bg-white\/\[0\.03\] { background-color: rgba(11, 22, 34, 0.04); }
-html.light .theme-scope .bg-line { background-color: rgba(11, 22, 34, 0.12); }
-html.light .theme-scope ::placeholder { color: rgba(11, 22, 34, 0.35); }
+html.light .theme-scope .border-line {
+  border-color: rgba(11, 22, 34, 0.12);
+}
+
+html.light .theme-scope .border-white\/15 {
+  border-color: rgba(11, 22, 34, 0.16);
+}
+
+html.light .theme-scope .border-white\/20 {
+  border-color: rgba(11, 22, 34, 0.22);
+}
+
+html.light .theme-scope .bg-white\/5 {
+  background-color: rgba(11, 22, 34, 0.05);
+}
+
+html.light .theme-scope .bg-white\/10 {
+  background-color: rgba(11, 22, 34, 0.08);
+}
+
+html.light .theme-scope .bg-white\/15 {
+  background-color: rgba(11, 22, 34, 0.1);
+}
+
+html.light .theme-scope .bg-white\/\[0\.03\] {
+  background-color: rgba(11, 22, 34, 0.04);
+}
+
+html.light .theme-scope .bg-line {
+  background-color: rgba(11, 22, 34, 0.12);
+}
+
+html.light .theme-scope ::placeholder {
+  color: rgba(11, 22, 34, 0.35);
+}
+
 /* marquee edge fades follow the light surface */
 html.light .theme-scope .from-black {
   --tw-gradient-from: #f3f5f9 var(--tw-gradient-from-position);
   --tw-gradient-to: rgb(243 245 249 / 0) var(--tw-gradient-to-position);
   --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
 }
+
 /* grain reads as multiply on light */
 html.light .theme-scope .grain {
   mix-blend-mode: multiply;
   opacity: 0.05;
 }
+
 html.light ::selection {
   background: #00b5e2;
   color: #fff;
 }
 
 @media (prefers-reduced-motion: reduce) {
+
   *,
   *::before,
   *::after {
@@ -277,6 +619,7 @@ html.light ::selection {
     transition-duration: 0.001ms !important;
     scroll-behavior: auto !important;
   }
+
   .has-cursor,
   .has-cursor * {
     cursor: auto !important;

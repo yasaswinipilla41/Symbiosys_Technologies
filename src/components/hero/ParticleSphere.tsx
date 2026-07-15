@@ -132,6 +132,7 @@ export default function ParticleSphere() {
     let t = 0;
     let hidden = false;
     let scattered = false;
+    let lastLight = false;
     const canvasEl = renderer.domElement;
     canvasEl.style.transition = 'opacity 0.4s ease';
 
@@ -149,21 +150,28 @@ export default function ParticleSphere() {
       const dEnd = servicesTop - vh * 0.3;
       const d = ease(clamp01((sy - dStart) / Math.max(dEnd - dStart, 1)));
 
-      // Light theme keeps the cinematic globe to the (dark) hero only —
-      // additive particles don't read on light section surfaces.
+      // Light theme: swap additive glow for normal blending so the globe and
+      // its dissolve stay visible on light section surfaces too.
       const lightTheme = document.documentElement.classList.contains('light');
-      const lightCut = lightTheme && sy > heroH * 0.7;
+      if (lightTheme !== lastLight) {
+        lastLight = lightTheme;
+        mat.blending = lightTheme ? THREE.NormalBlending : THREE.AdditiveBlending;
+        glowMat.blending = lightTheme ? THREE.NormalBlending : THREE.AdditiveBlending;
+        mat.needsUpdate = true;
+        glowMat.needsUpdate = true;
+      }
 
       // Fully done → park (zero cost until scrolled back)
-      const done = d >= 1 || lightCut;
+      const done = d >= 1;
       if (done !== hidden) {
         hidden = done;
         canvasEl.style.opacity = done ? '0' : '1';
       }
       if (!hidden) {
-        // Position: low center of the hero, easing further down as it travels
-        const xStart = 0;
-        const yStart = desktop ? -0.16 * halfH : -0.08 * halfH;
+        // Position: fully on the left half of the first screen,
+        // then glides to true center in sync with the scroll.
+        const xStart = desktop ? -0.5 * (halfH * camera.aspect) : 0;
+        const yStart = desktop ? -0.12 * halfH : -0.08 * halfH;
         group.position.x = THREE.MathUtils.lerp(xStart, 0, travel);
         group.position.y = THREE.MathUtils.lerp(yStart, -0.05 * halfH, travel) + Math.sin(t * 1.1) * 0.1 * (1 - d);
         const s = THREE.MathUtils.lerp(1, 0.82, travel) * (desktop ? 1 : 0.72);
@@ -200,10 +208,10 @@ export default function ParticleSphere() {
         // Bell-curve dim: full in the hero, recedes while passing About text,
         // re-brightens as it arrives to dissolve — keeps copy readable.
         const midDim = 1 - 0.62 * Math.sin(Math.PI * travel) * (1 - d);
-        mat.opacity = (1 - d) * midDim * (desktop ? 1 : 0.5);
+        mat.opacity = (1 - d) * midDim * (desktop ? 1 : 0.5) * (lightTheme ? 0.85 : 1);
         mat.size = 0.075 + d * 0.05; // particles soften as they scatter
-        wireMat.opacity = 0.14 * (1 - d) * midDim;
-        glowMat.opacity = 0.5 * (1 - d) * midDim * (desktop ? 1 : 0.4);
+        wireMat.opacity = 0.14 * (1 - d) * midDim * (lightTheme ? 1.6 : 1);
+        glowMat.opacity = 0.5 * (1 - d) * midDim * (desktop ? 1 : 0.4) * (lightTheme ? 0.18 : 1);
 
         renderer.render(scene, camera);
       }
@@ -213,7 +221,7 @@ export default function ParticleSphere() {
     if (reduced) {
       // Static frame in the hero; fade out past it. No animation loop.
       const desktop = window.innerWidth >= 1024;
-      group.position.set(0, desktop ? -0.16 * halfH : -0.08 * halfH, 0);
+      group.position.set(desktop ? -0.5 * halfH * camera.aspect : 0, desktop ? -0.12 * halfH : -0.08 * halfH, 0);
       group.scale.setScalar(desktop ? 1 : 0.72);
       mat.opacity = desktop ? 1 : 0.5;
       renderer.render(scene, camera);
