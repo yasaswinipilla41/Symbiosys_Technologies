@@ -110,63 +110,66 @@ export default function Services() {
           className="mt-6 h-[3px] w-24 origin-left rounded-full bg-gradient-to-r from-spark to-spark/0"
         />
 
-        <div className="mt-16 border-t border-white/10">
-          {services.map((s, i) => (
-            <motion.a
-              key={s.n}
-              href="#contact"
-              data-cursor="hover"
-              initial={{ opacity: 0, y: 24 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              whileHover={{ scale: 1.004 }}
-              viewport={{ once: true, amount: 0.4 }}
-              transition={{ duration: 0.6, delay: (i % 3) * 0.05, ease: [0.22, 1, 0.36, 1] }}
-              onMouseMove={(e) => {
-                const r = e.currentTarget.getBoundingClientRect();
-                e.currentTarget.style.setProperty('--mx', `${e.clientX - r.left}px`);
-                e.currentTarget.style.setProperty('--my', `${e.clientY - r.top}px`);
-              }}
-              className="group relative block border-b border-white/10"
-            >
-              {/* cursor-following soft glow */}
-              <div
-                className="pointer-events-none absolute inset-0 rounded-2xl opacity-0 transition-opacity duration-500 group-hover:opacity-100"
-                style={{ background: 'radial-gradient(380px circle at var(--mx,50%) var(--my,50%), rgba(0,181,226,0.09), transparent 65%)' }}
-              />
-              {/* accent hairline that grows on hover */}
-              <span className="pointer-events-none absolute inset-y-5 left-0 w-px origin-top scale-y-0 bg-accent transition-transform duration-500 ease-out group-hover:scale-y-100" />
-              <div className="grid grid-cols-[auto_1fr_auto] items-center gap-6 rounded-2xl px-3 py-7 transition-colors duration-300 group-hover:bg-white/[0.03] md:gap-10 md:px-5 md:py-9">
-                <span className="font-display text-sm text-white/40 transition-colors group-hover:text-accent">{s.n}</span>
-                <div className="min-w-0">
-                  <h3 className="heading-lg flex items-center gap-4 !text-white transition-transform duration-500 ease-out group-hover:translate-x-2">
-                    {s.title}
-                    {s.icon && (
-                      <s.icon
-                        aria-hidden="true"
-                        className="shrink-0 text-[0.7em] text-accent transition-transform duration-500 group-hover:rotate-12 group-hover:scale-110"
-                      />
-                    )}
-                  </h3>
-                  <div className="grid grid-rows-[0fr] overflow-hidden transition-[grid-template-rows] duration-500 ease-out group-hover:grid-rows-[1fr]">
-                    <div className="min-h-0">
-                      <p className="max-w-2xl pt-4 text-[15px] leading-relaxed text-white/55">{s.desc}</p>
-                      <div className="mt-4 flex flex-wrap gap-2">
-                        {s.tags.map((t) => (
-                          <span key={t} className="rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs text-white/80">
-                            {t}
-                          </span>
-                        ))}
-                      </div>
+        {/* Premium infinite carousel — track duplicated for a seamless loop */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.2 }}
+          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+          className="relative mt-16"
+          style={{ perspective: 1400 }}
+        >
+          {/* edge fades */}
+          <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-16 bg-gradient-to-r from-black to-transparent md:w-28" />
+          <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-16 bg-gradient-to-l from-black to-transparent md:w-28" />
+
+          <div className="svc-carousel overflow-hidden py-4">
+            <div className="svc-track flex w-max items-stretch">
+              {[...services, ...services].map((s, i) => {
+                const dup = i >= services.length;
+                return (
+                  <a
+                    key={`${s.n}-${i}`}
+                    href="#contact"
+                    data-cursor="hover"
+                    aria-hidden={dup || undefined}
+                    tabIndex={dup ? -1 : undefined}
+                    className="group svc-card relative mr-5 flex w-[82vw] max-w-[400px] shrink-0 flex-col overflow-hidden rounded-3xl border border-white/10 bg-white/[0.03] p-7 backdrop-blur-md sm:w-[380px] md:mr-6"
+                  >
+                    {/* animated gradient border */}
+                    <span className="tilt-border" aria-hidden="true" />
+                    <div className="flex items-center justify-between">
+                      <span className="font-display text-sm text-white/40 transition-colors duration-300 group-hover:text-accent">
+                        {s.n}
+                      </span>
+                      {s.icon && (
+                        <s.icon
+                          aria-hidden="true"
+                          className="text-xl text-accent transition-transform duration-500 group-hover:rotate-12 group-hover:scale-110"
+                        />
+                      )}
                     </div>
-                  </div>
-                </div>
-                <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full border border-white/20 text-white transition-all duration-300 group-hover:border-transparent group-hover:bg-gradient-to-br group-hover:from-royal group-hover:to-accent">
-                  <HiArrowUpRight className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-                </span>
-              </div>
-            </motion.a>
-          ))}
-        </div>
+                    <h3 className="mt-5 font-display text-2xl leading-tight text-white">{s.title}</h3>
+                    <p className="mt-3 text-sm leading-6 text-white/55">{s.desc}</p>
+                    <div className="mb-6 mt-4 flex flex-wrap gap-2">
+                      {s.tags.map((t) => (
+                        <span
+                          key={t}
+                          className="rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs text-white/80 transition-colors duration-300 group-hover:border-accent/40 group-hover:text-white"
+                        >
+                          {t}
+                        </span>
+                      ))}
+                    </div>
+                    <span className="mt-auto grid h-11 w-11 shrink-0 translate-y-0 place-items-center self-end rounded-full border border-white/20 text-white transition-all duration-300 group-hover:border-transparent group-hover:bg-gradient-to-br group-hover:from-royal group-hover:to-accent">
+                      <HiArrowUpRight className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                    </span>
+                  </a>
+                );
+              })}
+            </div>
+          </div>
+        </motion.div>
       </div>
     </section>
   );

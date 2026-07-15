@@ -10,7 +10,7 @@ import { AnimatePresence, motion } from 'framer-motion';
  */
 const WORD_1 = 'SYMBIOSYS';
 const WORD_2 = 'TECHNOLOGIES';
-const HOLD_MS = 3600;
+const HOLD_MS = 4600;
 
 function Letters({ word, base, step, className }: { word: string; base: number; step: number; className?: string }) {
   return (
@@ -44,6 +44,29 @@ export default function Loader() {
           aria-label="Symbiosys Technologies"
           role="img"
         >
+          {/* The building — cinematic blur-to-focus reveal, then a slow ken-burns drift */}
+          <div className="pointer-events-none absolute inset-0" style={{ perspective: 1000 }}>
+            <div className="intro-img h-full w-full">
+              <div className="intro-kenburns h-full w-full">
+                <img
+                  src="/campus.jpg"
+                  alt=""
+                  aria-hidden="true"
+                  className="h-full w-full object-cover"
+                  style={{ objectPosition: '50% 32%' }}
+                />
+              </div>
+            </div>
+            {/* cinematic grade + vignette so the mark owns the frame */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-black/80" />
+            <div className="absolute inset-0" style={{ boxShadow: 'inset 0 0 240px 100px rgba(0,0,0,0.92)' }} />
+            {/* light rays over the glass facade */}
+            <div
+              className="absolute inset-0 opacity-60 mix-blend-screen"
+              style={{ background: 'conic-gradient(from 205deg at 68% -5%, transparent 0deg, rgba(0,181,226,0.12) 14deg, transparent 32deg, transparent 330deg, rgba(150,205,245,0.08) 348deg, transparent 360deg)' }}
+            />
+          </div>
+
           {/* stage lighting */}
           <div
             className="intro-halo pointer-events-none absolute left-1/2 top-1/2 h-[70vmin] w-[110vmin] -translate-x-1/2 -translate-y-1/2 rounded-full"
@@ -63,7 +86,7 @@ export default function Loader() {
                 <h1 className="font-display font-normal leading-none tracking-[-0.03em]">
                   <Letters
                     word={WORD_1}
-                    base={0.25}
+                    base={1.1}
                     step={0.055}
                     className="block whitespace-nowrap text-[clamp(2.6rem,9.5vw,8.5rem)]"
                   />
@@ -72,7 +95,7 @@ export default function Loader() {
                   className="mt-3 font-display font-normal uppercase text-white/85 md:mt-5"
                   style={{ letterSpacing: '0.34em' }}
                 >
-                  <Letters word={WORD_2} base={0.85} step={0.04} className="block whitespace-nowrap text-[clamp(0.85rem,2.4vw,1.6rem)]" />
+                  <Letters word={WORD_2} base={1.7} step={0.04} className="block whitespace-nowrap text-[clamp(0.85rem,2.4vw,1.6rem)]" />
                 </div>
                 {/* sweeping light */}
                 <div className="intro-shine" />
