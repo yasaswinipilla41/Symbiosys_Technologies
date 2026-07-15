@@ -2,10 +2,11 @@ import SectionHeading from './ui/SectionHeading';
 import Reveal from './ui/Reveal';
 
 const clients = [
-  'AMD', 'Google', 'Reliance', 'L&T', 'Trimble', 'FIS', 'CSC', 'Technip', 'Kentz', 'Cambridge Systems',
+  'AMD', 'Google', 'Reliance', 'L&T', 'Trimble', 'FIS', 'CSC', 'Technip', 'Kentz', 'Cambridge Systems', 'Black Cat',
 ];
 const studios = [
   'Disney India', 'Prime Focus World', 'Reel FX', 'Titmouse', 'Animagrad', 'Mago Production', 'Postmodern', 'Metacube',
+  'Stranemani', 'D-Stereo', 'DigitZ Film', 'Frame Breed', 'IonArt', 'Pigeon Studios',
 ];
 
 function Row({ items, reverse = false }: { items: string[]; reverse?: boolean }) {

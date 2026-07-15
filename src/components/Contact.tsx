@@ -14,8 +14,14 @@ const categories = [
 const details = [
   { label: 'Business Enquiries', value: 'info@symbiosystech.com', href: 'mailto:info@symbiosystech.com' },
   { label: 'IT-Enabled Services', value: 'ites@symbiosystech.com', href: 'mailto:ites@symbiosystech.com' },
+  { label: 'Animation & VFX', value: 'animvfx@symbiosystech.com', href: 'mailto:animvfx@symbiosystech.com' },
+  { label: 'Engineering Services', value: 'esd@symbiosystech.com', href: 'mailto:esd@symbiosystech.com' },
   { label: 'Call', value: '+91 891-2550369', href: 'tel:+918912550369' },
-  { label: 'Offices', value: 'Visakhapatnam, India · United States', href: undefined },
+  {
+    label: 'Head Office',
+    value: 'IT Park, Hill No: 2, Rushikonda, Visakhapatnam, A.P., India · United States',
+    href: undefined,
+  },
 ];
 
 function Field({ label, name, type = 'text', textarea = false }: { label: string; name: string; type?: string; textarea?: boolean }) {
@@ -35,6 +41,11 @@ export default function Contact() {
   const [sent, setSent] = useState(false);
   const onSubmit = (e: FormEvent) => {
     e.preventDefault();
+    // compose a real enquiry email from the form fields
+    const fd = new FormData(e.currentTarget as HTMLFormElement);
+    const subject = `[${fd.get('category')}] ${fd.get('subject') ?? ''}`.trim();
+    const body = `Name: ${fd.get('name') ?? ''}\nEmail: ${fd.get('email') ?? ''}\nCategory: ${fd.get('category') ?? ''}\n\n${fd.get('message') ?? ''}`;
+    window.location.href = `mailto:info@symbiosystech.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
     setSent(true);
     setTimeout(() => setSent(false), 4000);
   };

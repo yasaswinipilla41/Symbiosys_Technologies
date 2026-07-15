@@ -58,6 +58,11 @@ export default function Footer() {
             <a href="mailto:info@symbiosystech.com" className="mt-6 inline-block font-extralight text-white transition-colors hover:text-spark">
               info@symbiosystech.com
             </a>
+            <p className="mt-3 text-[13px] font-extralight leading-relaxed text-muted">
+              IT Park, Hill No: 2, Rushikonda,
+              <br />
+              Visakhapatnam, A.P., India
+            </p>
           </div>
         </div>
 
