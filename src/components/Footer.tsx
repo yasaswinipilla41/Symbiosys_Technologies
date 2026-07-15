@@ -26,8 +26,8 @@ export default function Footer() {
 
         <div className="grid gap-12 py-14 md:grid-cols-12">
           <div className="md:col-span-5">
-            <span className="inline-flex items-center rounded-lg bg-white px-3 py-2">
-              <Logo className="h-8" />
+            <span className="inline-flex items-center rounded-xl border border-white/30 bg-white/85 px-3.5 py-2 shadow-[0_6px_22px_rgba(0,0,0,0.35)] backdrop-blur-md">
+              <Logo className="h-9" />
             </span>
             <p className="mt-6 max-w-sm font-extralight leading-relaxed text-muted">
               A multi-vertical company specializing in IT, IT-enabled services, engineering services

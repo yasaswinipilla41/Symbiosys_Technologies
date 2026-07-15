@@ -43,9 +43,15 @@ export default function Navbar() {
       }`}
     >
       <div className="container-x flex items-center justify-between py-5">
-        <a href="#home" aria-label="Symbiosys Technologies home" className="shrink-0">
-          <span className="inline-flex items-center rounded-lg bg-white px-2.5 py-1.5">
-            <Logo className="h-7 sm:h-8" />
+        <a href="#home" aria-label="Symbiosys Technologies home" className="shrink-0" data-cursor="hover">
+          <span
+            className={`inline-flex items-center rounded-xl px-3 py-1.5 backdrop-blur-md transition-all duration-500 ${
+              darkSurface
+                ? 'border border-white/30 bg-white/85 shadow-[0_6px_22px_rgba(0,0,0,0.4)]'
+                : 'border border-black/10 bg-white/70 shadow-[0_4px_14px_rgba(11,22,34,0.10)]'
+            }`}
+          >
+            <Logo className="h-8 sm:h-9" />
           </span>
         </a>
 
