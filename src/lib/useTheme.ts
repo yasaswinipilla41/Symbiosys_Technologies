@@ -2,7 +2,9 @@ import { useSyncExternalStore } from 'react';
 
 export type Theme = 'dark' | 'light';
 
-const KEY = 'sym-theme';
+// v2: key versioned so every visitor starts on the dark theme by default
+// (older saved "light" values under the previous key are ignored).
+const KEY = 'sym-theme-v2';
 let current: Theme =
   typeof window !== 'undefined' && localStorage.getItem(KEY) === 'light' ? 'light' : 'dark';
 

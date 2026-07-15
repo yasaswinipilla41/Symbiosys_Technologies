@@ -266,6 +266,80 @@ body {
   }
 }
 
+/* technical grid — hairline cells fading toward the edges */
+.intro-grid {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.045) 1px, transparent 1px);
+  background-size: 88px 88px;
+  -webkit-mask-image: radial-gradient(120% 100% at 50% 45%, #000 50%, transparent 100%);
+  mask-image: radial-gradient(120% 100% at 50% 45%, #000 50%, transparent 100%);
+}
+
+/* edge glows — slow drift + breathing */
+.intro-glow {
+  position: absolute;
+  border-radius: 9999px;
+  pointer-events: none;
+  animation: intro-glow-breathe 8s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+
+@keyframes intro-glow-breathe {
+
+  0%,
+  100% {
+    opacity: 0.5;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+
+  50% {
+    opacity: 0.95;
+    transform: translate3d(2%, -3%, 0) scale(1.14);
+  }
+}
+
+/* floating light motes */
+.intro-particle {
+  position: absolute;
+  border-radius: 9999px;
+  pointer-events: none;
+  animation: intro-particle 9s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+
+@keyframes intro-particle {
+
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+    opacity: 0.12;
+  }
+
+  50% {
+    transform: translate3d(8px, -30px, 0);
+    opacity: 0.55;
+  }
+}
+
+/* counter-phase levitation — the building drifts opposite the title */
+.intro-counterfloat {
+  animation: intro-counterfloat 5.5s ease-in-out 1.6s infinite;
+  will-change: transform;
+}
+
+@keyframes intro-counterfloat {
+
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+
+  50% {
+    transform: translate3d(0, 10px, 0);
+  }
+}
+
 /* breathing ambient glow behind the mark */
 .intro-halo {
   animation: intro-halo 3.2s ease-in-out 0.4s infinite;
